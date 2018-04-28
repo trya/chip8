@@ -1,0 +1,26 @@
+Yet another CHIP-8 VM implementation
+====================================
+by trya - tryagainprod@gmail.com
+
+Some peculiarities:
+-------------------
+- modular and exposing an API to easily reimplement the frontend in
+pretty much any language or environment possible.
+- core of the VM is written in C99-compliant C.
+- SDL frontend is also written in C, but can only compile on Linux at
+the moment, as it uses the Linux-specific timerfd for timer operations
+- the interpreter does not limitate the number of instructions per
+second, so it's up to the frontend to make the interpreter wait during
+keyboard or display operations. For example, the SDL frontend waits
+either on vsync or keyboard event.
+
+Build instructions:
+-------------------
+$ make
+- binaries will be put in bin/ in the project directory.
+Other targets:
+- clean: remove binaries and object files
+- debug: build binaries with debug symbols (make sure to clean before)
+- chip8_dummy: build dummy executable without any interface (video,
+audio, keyboard, timers) implemented
+- chip8_sdl: SDL frontend
