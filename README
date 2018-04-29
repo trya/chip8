@@ -24,3 +24,15 @@ Other targets:
 - chip8_dummy: build dummy executable without any interface (video,
 audio, keyboard, timers) implemented
 - chip8_sdl: SDL frontend
+
+Usage:
+------
+- SDL frontend:
+$ chip8_sdl rom_file
+Controls only through keyboard at the moment, the keys are
+layout-independant (that is, they're at the same location for any
+PC keyboard). For example, on a QWERTY keyboard, the keys are mapped as:
+1 2 3 4      1 2 3 C
+Q W E R ---\ 4 5 6 D
+A S D F ---/ 7 8 9 E
+Z X C V      A 0 B F
