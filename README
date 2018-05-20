@@ -23,7 +23,7 @@ Other targets:
 - debug: build binaries with debug symbols (make sure to clean before)
 - chip8_dummy: build dummy executable without any interface (video,
 audio, keyboard, timers) implemented
-- chip8_sdl: SDL frontend
+- chip8_sdl: SDL frontend, needs the latest version of SDL2
 
 Usage:
 ------
