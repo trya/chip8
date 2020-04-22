@@ -37,6 +37,7 @@ chip8_start:
 	while (run && !reset) { // TODO: atomic get
 		op = fetch_opcode(&st);
 #ifdef DEBUG
+		printf("\f");
 		print_state_lite(&st);
 		print_opcode(op, &st);
 #endif
