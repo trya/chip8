@@ -133,8 +133,8 @@ static void (*op_table_9[])(void) = {
 };
 
 static void (*op_table_F[])(void) = {
-	op_FX0 , op_FX1 , op_FX2 , op_FX3 ,	op_null, op_FX5 , op_FX6 , op_null,
-	op_null, op_null, op_null, op_null,	op_null, op_null, op_null, op_null
+	op_FX0 , op_FX1 , op_FX2 , op_FX3 , op_null, op_FX5 , op_FX6 , op_null,
+	op_null, op_null, op_null, op_null, op_null, op_null, op_null, op_null
 };
 
 static void (*op_table_FX0[])(void) = {
