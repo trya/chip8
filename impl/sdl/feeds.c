@@ -62,7 +62,7 @@ int wait_keystate_request(void)
 int send_keystate(void *data)
 {
 	// set keystate of chip8 system
-	
+
 	return 0;
 }
 

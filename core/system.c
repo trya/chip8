@@ -7,8 +7,7 @@
 #include "system.h"
 #include "utils.h"
 
-unsigned char chip8_fontset[80] =
-{
+unsigned char chip8_fontset[80] = {
 	/* highest 4 bits are pixels, the rest are ignored */
 	0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
 	0x20, 0x60, 0x20, 0x20, 0x70, // 1
@@ -34,7 +33,7 @@ void init_state(struct chip8_state *st)
 	st->pc = PROGRAM_START;
 	/* copy fonts to 0x0 */
 	memcpy(st->mem, chip8_fontset, sizeof(chip8_fontset));
-	
+
 	/* set a seed for the PRNG */
 	srand(time(NULL));
 }
@@ -53,7 +52,7 @@ void print_state(struct chip8_state *st)
 		putchar('\n');
 	}
 	putchar('\n');
-	
+
 	/* screen */
 	printf("screen:\n");
 	for (y = 0; y < YRES; y++) {
@@ -67,7 +66,7 @@ void print_state(struct chip8_state *st)
 		putchar('\n');
 	}
 	putchar('\n');
-	
+
 	/* registers */
 	printf("registers:\n");
 	printf("pc: 0x%03x\t", st->pc);
@@ -84,7 +83,7 @@ void print_state(struct chip8_state *st)
 		printf(" %2x", st->vx[x]);
 	}
 	printf("\n\n");
-	
+
 	/* stack */
 	printf("stack:\n");
 	for (x = 0; x < STACK_SIZE; x++) {
@@ -93,13 +92,13 @@ void print_state(struct chip8_state *st)
 	putchar('\n');
 	printf("stack index: %u\n", st->si);
 	putchar('\n');
-	
+
 	/* timers */
 	printf("timers:\n");
 	printf("delay: %x\t", st->d_timer);
 	printf("sound: %x\n", st->s_timer);
 	putchar('\n');
-	
+
 	/* keystate */
 	uint16_t mask;
 	char s[17] = {0};
@@ -114,7 +113,7 @@ void print_state(struct chip8_state *st)
 void print_state_lite(struct chip8_state *st)
 {
 	int x;
-	
+
 	/* registers */
 	printf("registers:\n");
 	printf("pc: 0x%03x\t", st->pc);
@@ -131,7 +130,7 @@ void print_state_lite(struct chip8_state *st)
 		printf(" %2x", st->vx[x]);
 	}
 	printf("\n\n");
-	
+
 	/* stack */
 	printf("stack:\n");
 	for (x = 0; x < STACK_SIZE; x++) {
@@ -140,13 +139,13 @@ void print_state_lite(struct chip8_state *st)
 	putchar('\n');
 	printf("stack index: %u\n", st->si);
 	putchar('\n');
-	
+
 	/* timers */
 	printf("timers:\n");
 	printf("delay: %x\t", st->d_timer);
 	printf("sound: %x\n", st->s_timer);
 	putchar('\n');
-	
+
 	/* keystate */
 	uint16_t mask;
 	char s[17] = {0};

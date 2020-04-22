@@ -33,7 +33,7 @@ int wait_keypress(struct chip8_state *st)
 {
 	// TODO: atomic access of run
 	int key;
-	
+
 	/* look for a pressed key */
 	SDL_LockMutex(keystate_mutex);
 	do {
@@ -49,7 +49,7 @@ int wait_keypress(struct chip8_state *st)
 		}
 	} while (key > 0xF && run);
 	SDL_UnlockMutex(keystate_mutex);
-	
+
 	/* wait for the pressed key to be released
 	 * (as specified in the interpreter for the COSMAS,
 	 * cf. http://laurencescotford.co.uk/?p=347) */
@@ -65,7 +65,7 @@ int wait_keypress(struct chip8_state *st)
 		}
 	}
 	SDL_UnlockMutex(keystate_mutex);
-	
+
 	return key;
 }
 
@@ -77,7 +77,7 @@ int draw_screen(struct chip8_state *st)
 	blit_screen_surface(NULL);
 	refresh_window(NULL);
 	SDL_UnlockMutex(refresh_mutex);
-	
+
 	return 0;
 }
 
@@ -103,17 +103,17 @@ int init_timers_ctrl(void)
 	// activation after 1/60th of a second (double 0 would disarm the timer)
 	timer.it_value.tv_sec = 0;
 	timer.it_value.tv_nsec = 16666667;
-	
+
 	if ((timer_fd = timerfd_create(CLOCK_MONOTONIC, TFD_NONBLOCK)) < 0) {
 		perror("timerfd_create");
 		return -1;
 	}
-	
+
 	if (timerfd_settime(timer_fd, 0, &timer, NULL) < 0) {
 		perror("timerfd_settime");
 		return -1;
 	}
-	
+
 	return 0;
 }
 
@@ -129,7 +129,7 @@ static void refresh_timer(uint8_t *timer, uint64_t ticks)
 int refresh_timers(struct chip8_state *st)
 {
 	uint64_t ticks;
-	
+
 	if (read(timer_fd, &ticks, sizeof(ticks)) < 0) {
 		if (errno == EAGAIN) {
 			return 0;
@@ -138,9 +138,9 @@ int refresh_timers(struct chip8_state *st)
 			return -1;
 		}
 	}
-	
+
 	refresh_timer(&st->d_timer, ticks);
 	refresh_timer(&st->s_timer, ticks);
-	
+
 	return 0;
 }

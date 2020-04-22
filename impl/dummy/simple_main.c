@@ -19,7 +19,7 @@ int main(int argc, char **argv)
 		fprintf(stderr, "Failed to open rom file\n");
 		exit(EXIT_FAILURE);
 	}
-	
+
 	if (init_video_feed() < 0) {
 		printf("Failed to init video feed\n");
 		exit(EXIT_FAILURE);
@@ -32,11 +32,11 @@ int main(int argc, char **argv)
 		printf("Failed to init keystate feed\n");
 		exit(EXIT_FAILURE);
 	}
-	
+
 	emulation_loop(rom_file);
-	
+
 	fclose(rom_file);
 	puts("Bye!");
-	
+
 	return 0;
 }

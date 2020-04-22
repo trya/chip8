@@ -20,7 +20,7 @@ void emulation_loop(FILE *rom_file)
 		printf("Failed to init timers\n");
 		return;
 	}
-	
+
 #ifdef DEBUG
 	op_count = 0;
 #endif
@@ -32,7 +32,7 @@ chip8_start:
 		return;
 	}
 	puts("rom loaded successfully, starting program now");
-	
+
 	// TODO: catch stop signal or opcode exception
 	while (run && !reset) { // TODO: atomic get
 		op = fetch_opcode(&st);
@@ -46,13 +46,13 @@ chip8_start:
 		op_count++;
 #endif
 	}
-	
+
 	if (reset) {
 		puts("resetting...");
 		reset = 0;
 		goto chip8_start;
 	}
-	
+
 	puts("emu loop exited");
 }
 

@@ -59,7 +59,7 @@ static int fill_sound_buffer(uint8_t *buf, size_t sz, int wave_freq);
 int atomic_exec(int (*func)(void *), void *data, SDL_mutex *mut)
 {
 	int res;
-	
+
 	if (SDL_LockMutex(mut) < 0) {
 		printf("SDL_LockMutex: %s\n", SDL_GetError());
 		return -1;
@@ -70,7 +70,7 @@ int atomic_exec(int (*func)(void *), void *data, SDL_mutex *mut)
 			return -1;
 		}
 	}
-	
+
 	return res;
 }
 
@@ -92,7 +92,7 @@ int blit_screen_surface(void *data)
 		/* LowerBlit instead of BlitSurface because verification
 		 * has already been done by ConvertSurface */
 	}
-	
+
 	return 0;
 }
 
@@ -101,7 +101,7 @@ int refresh_window(void *data)
 	SDL_UpdateTexture(texture, NULL, screen->pixels, screen->pitch);
 	SDL_RenderCopy(renderer, texture, NULL, NULL);
 	SDL_RenderPresent(renderer);
-	
+
 	return 0;
 }
 
@@ -109,7 +109,7 @@ int events_loop(void *data)
 {
 	SDL_Event event;
 	uint16_t mask;
-	
+
 	while (1) {
 		if (!SDL_WaitEvent(&event)) {
 			printf("SDL_WaitEvent: %s\n", SDL_GetError());
@@ -131,7 +131,7 @@ int events_loop(void *data)
 				reset = 1; // TODO: atomicity
 				break;
 			}
-			
+
 			for (int i = 0; i < 16; i++) {
 				if (event.key.keysym.scancode == keymap[i].scancode) {
 					mask = 1 << keymap[i].keynum;
@@ -168,12 +168,12 @@ int init_sdl(void)
 		printf("SDL_Init: %s\n", SDL_GetError());
 		return -1;
 	}
-	
+
 	if (atexit(SDL_Quit) < 0) {
 		printf("Failed to set exit function\n");
 		return -1;
 	}
-	
+
 	window = SDL_CreateWindow("CHIP-8 SDL Display",
 	                          SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
 	                          640, 320, SDL_WINDOW_RESIZABLE);
@@ -182,7 +182,7 @@ int init_sdl(void)
 		return -1;
 	}
 	SDL_ShowCursor(SDL_DISABLE);
-	
+
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC);
 	if (renderer == NULL) {
 		printf("SDL_CreateRenderer: %s\n", SDL_GetError());
@@ -191,31 +191,31 @@ int init_sdl(void)
 	SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
 	SDL_RenderClear(renderer);
 	SDL_RenderPresent(renderer);
-	
+
 	SDL_Delay(1000);
-	
+
 	SDL_Color colors[] = {
 		{.r = 0, .g = 0, .b = 0, .a = 255},
 		{.r = 255, .g = 255, .b = 255, .a = 255}
 	};
-	
+
 	surface = SDL_CreateRGBSurfaceWithFormat(0, RES_X, RES_Y, DEPTH_BITS, PIXEL_FORMAT);
 	if (surface == NULL) {
 		printf("SDL_CreateRGBSurfaceWithFormatFrom: %s\n", SDL_GetError());
 		return -1;
 	}
 	screen_buf = surface->pixels;
-	
+
 	if (SDL_SetPaletteColors(surface->format->palette, colors, 0, 2) < 0) {
 		printf("SDL_SetPaletteColors: %s\n", SDL_GetError());
 		return -1;
 	}
-	
+
 	SDL_RendererInfo info;
 	SDL_GetRendererInfo(renderer, &info);
 	Uint32 format = info.texture_formats[0];
 	texture = SDL_CreateTexture(renderer, format, SDL_TEXTUREACCESS_STREAMING,
-                                surface->w, surface->h);
+	                            surface->w, surface->h);
 	if (texture == NULL) {
 		printf("SDL_CreateTexture: %s\n", SDL_GetError());
 		return -1;
@@ -234,15 +234,15 @@ int init_sdl(void)
 	} else {
 		screen = surface;
 	}
-	
+
 	/* audio */
 	SDL_AudioSpec want, have;
-	
+
 	if (SDL_Init(SDL_INIT_AUDIO) < 0) {
 		fprintf(stderr, "error: can't initialize SDL audio subsystem\n");
 		exit(-1);
 	}
-	
+
 	int devcount = SDL_GetNumAudioDevices(0);
 #ifdef DEBUG
 	printf("List of audio devices: \n");
@@ -250,11 +250,11 @@ int init_sdl(void)
 		printf("%d: %s\n", i, SDL_GetAudioDeviceName(i, 0));
 	}
 #endif
-	
+
 	if (!devcount) {
 		fprintf(stderr, "warning: no audio device detected\n");
 	}
-	
+
 	memset(&want, 0, sizeof(want));
 	want.freq = 44100; // don't forget to convert buffers if that frequency is unavailable
 	want.format = AUDIO_S16LSB;
@@ -262,14 +262,14 @@ int init_sdl(void)
 	want.samples = 4096;
 	want.callback = NULL;
 	want.userdata = NULL;
-	
+
 	devid = SDL_OpenAudioDevice(NULL, 0, &want, &have, 0);
 	if (!devid) {
 		fprintf(stderr, "error: can't open default audio device (%s)\n", SDL_GetError());
 		return -1;
 	}
 	SDL_PauseAudioDevice(devid, 0);
-	
+
 	sndbuf_sz = (sampling_freq / 60)*2; // buffer for 1/60th of a second
 	sndbuf = malloc(sndbuf_sz);
 	if (!sndbuf) {
@@ -278,7 +278,7 @@ int init_sdl(void)
 	}
 	sample_max *= wave_ampl;
 	sample_min *= wave_ampl;
-	
+
 	/* mutexes and condition variables */
 	run_mutex = SDL_CreateMutex();
 	if (run_mutex == NULL) {
@@ -300,7 +300,7 @@ int init_sdl(void)
 		printf("SDL_CreateCond: %s\n", SDL_GetError());
 		return -1;
 	}
-	
+
 	return 0;
 }
 
@@ -310,20 +310,20 @@ int exec_sdl_threads(void)
 	atomic_exec(set_run, &(int){1}, run_mutex);
 	
 	quit_event.type = SDL_QUIT; // push this event in case of imminent exit
-	
+
 	event_th = SDL_CreateThread(events_loop, "Events loop", NULL);
 	if (event_th == NULL) {
 		printf("SDL_CreateThread: %s\n", SDL_GetError());
 		return -1;
 	}
-	
+
 	return 0;
 }
 
 void wait_sdl_threads(void)
 {
 	int res;
-	
+
 	SDL_WaitThread(event_th, &res);
 	if (res < 0) {
 		printf("Events thread returned unsuccessfully\n");
@@ -364,28 +364,28 @@ int fill_sound_buffer(uint8_t *buf, size_t sz, int wave_freq)
 	/* assuming S16LSB samples at amplitude 'ampl'
 	 * for a square wave of frequency 'wave_freq'
 	 * to a mono sound device of frequency 'sampling_freq' */
-	
+
 	unsigned period = (sampling_freq/2) / wave_freq;
 	if ((sampling_freq/2) % wave_freq == 0) {
 		period++; // ceiling
 	}
-	
+
 	for (size_t i = 0; i < sz; i += 2) {
 		if (samples_count % period == 0) {
 			wave = wave ? 0 : 1;
 		}
-		
-		if (wave) { 
+
+		if (wave) {
 			buf[i]   = sample_max & 0xFF;
 			buf[i+1] = sample_max >> 8;
 		} else {
 			buf[i]   = sample_min & 0xFF;
 			buf[i+1] = sample_min >> 8;
 		}
-		
+
 		samples_count++;
 	}
-	
+
 	return 0;
 }
 

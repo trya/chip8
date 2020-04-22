@@ -14,7 +14,7 @@ int init_video_feed(void)
 int update_screen_buf(void *buf)
 {
 	memset(buf, 0, PIXBUF_SIZE);
-	
+
 	return 0;
 }
 

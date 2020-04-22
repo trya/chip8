@@ -108,7 +108,7 @@ struct op_desc op_descriptions[36] = {
 	{ "FX33", "store BCD(V%u) from I to I+2" },
 	{ "FX55", "store V0 to V%u to I" },
 	{ "FX65", "restore V0 to V%u from I" },
-	
+
 	{ "null", "" }
 };
 
@@ -306,7 +306,7 @@ static void op_FX6(void)
 static void op_00E0(void)
 {
 	memset(st_cur->screen_buf, 0, sizeof(st_cur->screen_buf));
-	
+
 	if (draw_screen(st_cur) < 0) {
 		fprintf(stderr, "error: could not draw screen\n");
 		// signal problem
@@ -427,15 +427,15 @@ static void op_DXYN(void)
 	uint8_t y = st_cur->vx[u16_third_nibble(op_cur)] % YRES;
 	uint8_t n = u16_fourth_nibble(op_cur);
 	uint16_t i = st_cur->i;
-	
+
 	// distances from screen borders
 	int d_side = XRES - x;
 	int d_bottom = YRES - y;
-	
+
 	// height and width of sprite on screen (max. 8xN)
 	uint8_t w = d_side < 8 ? d_side : 8;
 	uint8_t h = d_bottom < n ? d_bottom : n;
-	
+
 	/* drawing loop: XOR pixels with the a-th bit of the sprite at i,
 	 * if at least one pixel is set from 1 to 0, VF is set to 1 */
 	int a; // column
@@ -458,7 +458,7 @@ static void op_DXYN(void)
 		y++;
 		i++;
 	}
-	
+
 	if (draw_screen(st_cur) < 0) {
 		fprintf(stderr, "error: could not draw screen\n");
 		// signal problem
@@ -567,7 +567,7 @@ static void op_EX9E(void)
 		fprintf(stderr, "error: could not refresh key state\n");
 		// signal problem
 	}
-	
+
 	uint8_t idx = u16_second_nibble(op_cur);
 	if (is_key_pressed(st_cur->vx[idx], st_cur)) {
 		st_cur->pc += 2;
@@ -582,7 +582,7 @@ static void op_EXA1(void)
 		fprintf(stderr, "error: could not refresh key state\n");
 		// signal problem
 	}
-	
+
 	uint8_t idx = u16_second_nibble(op_cur);
 	if (!is_key_pressed(st_cur->vx[idx], st_cur)) {
 		st_cur->pc += 2;
@@ -596,7 +596,7 @@ static void op_FX07(void)
 		fprintf(stderr, "error: could not refresh timers\n");
 		// signal problem
 	}
-	
+
 	uint8_t idx = u16_second_nibble(op_cur);
 	st_cur->vx[idx] = st_cur->d_timer;
 }
@@ -609,7 +609,7 @@ static void op_FX0A(void)
 		fprintf(stderr, "error: keypress awaiting failed\n");
 		// signal problem
 	}
-	
+
 	uint8_t idx = u16_second_nibble(op_cur);
 	st_cur->vx[idx] = key;
 }
@@ -621,7 +621,7 @@ static void op_FX15(void)
 		fprintf(stderr, "error: could not refresh timers\n");
 		// signal problem
 	}
-	
+
 	uint8_t idx = u16_second_nibble(op_cur);
 	st_cur->d_timer = st_cur->vx[idx];
 }
@@ -633,12 +633,12 @@ static void op_FX18(void)
 		fprintf(stderr, "error: could not refresh timers\n");
 		// signal problem
 	}
-	
+
 	uint8_t idx = u16_second_nibble(op_cur);
 	int rem_timer = st_cur->s_timer;
 	st_cur->s_timer = st_cur->vx[idx];
 	int diff = (int)st_cur->s_timer - rem_timer;
-	
+
 	// TODO: checks
 	if (diff < 0) {
 		/* discard current sound playing before replaying */
@@ -672,7 +672,7 @@ static void op_FX33(void)
 {
 	uint8_t idx = u16_second_nibble(op_cur);
 	uint8_t vx = st_cur->vx[idx];
-	
+
 	uint8_t ones = vx % 10;
 	vx /= 10;
 	uint8_t tens = vx % 10;
@@ -680,7 +680,7 @@ static void op_FX33(void)
 	/* since 0 <= vx <= 255, 0 <= vx/100 <= 2,
 	 * so there's no need to apply modulus */
 	uint8_t hundreds = vx;
-	
+
 	st_cur->mem[st_cur->i] = hundreds;
 	st_cur->mem[st_cur->i+1] = tens;
 	st_cur->mem[st_cur->i+2] = ones;
@@ -714,7 +714,7 @@ uint16_t fetch_opcode(struct chip8_state *st)
 {
 	uint8_t *mem = st->mem;
 	uint16_t pc = st->pc;
-	
+
 	return (mem[pc] << 8) | mem[pc+1]; // 2-byte big-endian opcodes
 }
 

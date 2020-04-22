@@ -22,7 +22,7 @@ int main(int argc, char **argv)
 		fprintf(stderr, "Failed to open rom file\n");
 		exit(EXIT_FAILURE);
 	}
-	
+
 	// order is important here
 	if (init_video_feed() < 0) {
 		printf("Failed to init video feed\n");
@@ -44,16 +44,16 @@ int main(int argc, char **argv)
 		printf("Failed to execute SDL threads\n");
 		exit(EXIT_FAILURE);
 	}
-	
+
 	emulation_loop(rom_file);
 	wait_sdl_threads();
 	cleanup_sdl();
-	
+
 	fclose(rom_file);
-	
+
 	// other cleanup and checks to be performed here
-	
+
 	puts("Bye!");
-	
+
 	return 0;
 }
