@@ -250,6 +250,10 @@ int init_sdl(void)
 	}
 #endif
 	
+	if (!devcount) {
+		fprintf(stderr, "warning: no audio device detected\n");
+	}
+	
 	memset(&want, 0, sizeof(want));
 	want.freq = 44100; // don't forget to convert buffers if that frequency is unavailable
 	want.format = AUDIO_S16LSB;
@@ -258,18 +262,11 @@ int init_sdl(void)
 	want.callback = NULL;
 	want.userdata = NULL;
 	
-	if (devcount == 1) {
-		const char *devname = SDL_GetAudioDeviceName(0, 0);
-		devid = SDL_OpenAudioDevice(devname, 0, &want, &have, 0);
-		if (!devid) {
-			fprintf(stderr, "error: can't open audio device 0 (%s)\n", SDL_GetError());
-			exit(-1);
-		}
-	} else {
-		/* not implemented */
-		exit(0);
+	devid = SDL_OpenAudioDevice(NULL, 0, &want, &have, 0);
+	if (!devid) {
+		fprintf(stderr, "error: can't open default audio device (%s)\n", SDL_GetError());
+		return -1;
 	}
-	
 	SDL_PauseAudioDevice(devid, 0);
 	
 	sndbuf_sz = (sampling_freq / 60)*2; // buffer for 1/60th of a second
