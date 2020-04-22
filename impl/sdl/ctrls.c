@@ -104,17 +104,8 @@ int init_timers_ctrl(void)
 	timer.it_value.tv_sec = 0;
 	timer.it_value.tv_nsec = 16666667;
 	
-	if ((timer_fd = timerfd_create(CLOCK_MONOTONIC, 0)) < 0) {
+	if ((timer_fd = timerfd_create(CLOCK_MONOTONIC, TFD_NONBLOCK)) < 0) {
 		perror("timerfd_create");
-		return -1;
-	}
-	int flags = fcntl(timer_fd, F_GETFL, 0);
-	if (flags < 0) {
-		perror("fcntl");
-		return -1;
-	}
-	if (fcntl(timer_fd, F_SETFL, flags | O_NONBLOCK) < 0) {
-		perror("fcntl");
 		return -1;
 	}
 	
