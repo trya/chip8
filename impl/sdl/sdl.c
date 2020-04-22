@@ -181,6 +181,7 @@ int init_sdl(void)
 		printf("SDL_CreateWindow: %s\n", SDL_GetError());
 		return -1;
 	}
+	SDL_ShowCursor(SDL_DISABLE);
 	
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC);
 	if (renderer == NULL) {
